@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartographie des tâches - Template Notion</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f5;
+            color: #37352f;
+            line-height: 1.5;
+        }
+        
+        .notion-header {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e9e9e7;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .notion-title {
+            font-size: 40px;
+            font-weight: 700;
+            margin: 0;
+            color: #37352f;
+        }
+        
+        .notion-subtitle {
+            font-size: 16px;
+            color: #787774;
+            margin: 10px 0 0 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f7f6f3;
+            padding: 20px;
+            border-bottom: 1px solid #e9e9e7;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-content {
+            padding: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: #f7f6f3;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e9e9e7;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 10px 0 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #787774;
+            font-weight: 500;
+        }
+        
+        .notion-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #e9e9e7;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .notion-table th {
+            background: #f7f6f3;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 1px solid #e9e9e7;
+            border-right: 1px solid #e9e9e7;
+        }
+        
+        .notion-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f7f6f3;
+            border-right: 1px solid #e9e9e7;
+            vertical-align: top;
+        }
+        
+        .notion-table tr:hover {
+            background: #f7f6f3;
+        }
+        
+        .score-high { 
+            background: #e6ffed; 
+            color: #0f5132; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-weight: 600;
+        }
+        
+        .score-medium { 
+            background: #fff3cd; 
+            color: #664d03; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-weight: 600;
+        }
+        
+        .score-low { 
+            background: #f8d7da; 
+            color: #721c24; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-weight: 600;
+        }
+        
+        .category-production { background: #e6f3ff; }
+        .category-vente { background: #fff0e6; }
+        .category-communication { background: #e6f7ff; }
+        .category-admin { background: #ffe6f0; }
+        .category-veille { background: #f0e6ff; }
+        
+        .add-task-form {
+            background: #f7f6f3;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #37352f;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #e9e9e7;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .btn {
+            background: #2383e2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        
+        .btn:hover {
+            background: #1a6bb8;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid #e9e9e7;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .filter-tab:hover {
+            background: #f7f6f3;
+        }
+        
+        .filter-tab.active {
+            background: #2383e2;
+            color: white;
+            border-color: #2383e2;
+        }
+        
+        .view-selector {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            align-items: center;
+        }
+        
+        .view-btn {
+            padding: 8px 16px;
+            border: 1px solid #e9e9e7;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .view-btn:hover {
+            background: #f7f6f3;
+        }
+        
+        .view-btn.active {
+            background: #2383e2;
+            color: white;
+            border-color: #2383e2;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e9e9e7;
+            margin: 20px 0;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .kanban-column {
+            background: #f7f6f3;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .kanban-header {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .kanban-card {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e9e9e7;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .card-meta {
+            font-size: 12px;
+            color: #787774;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .formula-display {
+            background: #f7f6f3;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9e9e7;
+            font-family: 'Monaco', 'Menlo', monospace;
+            margin: 15px 0;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffecb5;
+            color: #664d03;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .notion-callout {
+            background: #f7f6f3;
+            border: 1px solid #e9e9e7;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .callout-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #e9e9e7;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #2383e2;
+            transition: width 0.3s ease;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="notion-header">
+        <div class="container">
+            <h1 class="notion-title">Cartographie des tâches</h1>
+            <p class="notion-subtitle">Outil web interactif pour identifier précisément où tu perds ton temps</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Introduction et contexte -->
+        <div class="section">
+            <div class="section-header">
+                📋 Pourquoi cartographier tes tâches ?
+            </div>
+            <div class="section-content">
+                <div class="notion-callout">
+                    <div class="callout-icon">⚡</div>
+                    <div>
+                        <strong>La réalité brutale :</strong> 89% des solopreneurs pensent connaître leurs voleurs de temps. 
+                        <strong>TOUS se trompent sur au moins 60% de leurs tâches.</strong> Ton cerveau te ment sur tes priorités réelles.
+                    </div>
+                </div>
+                
+                <div style="margin: 30px 0;">
+                    <h3>Ce que tu penses vs la réalité</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <div style="padding: 20px; background: #fff3cd; border-radius: 6px; border: 1px solid #ffecb5;">
+                            <h4 style="color: #664d03; margin-top: 0;">❌ Tes impressions (fausses)</h4>
+                            <ul style="color: #664d03;">
+                                <li>"J'ai travaillé 12h, je suis productif"</li>
+                                <li>"Cette tâche était importante"</li>
+                                <li>"Je ne peux pas déléguer ça"</li>
+                                <li>"Je sais où je perds mon temps"</li>
+                            </ul>
+                        </div>
+                        <div style="padding: 20px; background: #d4edda; border-radius: 6px; border: 1px solid #c3e6cb;">
+                            <h4 style="color: #155724; margin-top: 0;">✅ La réalité (mesurée)</h4>
+                            <ul style="color: #155724;">
+                                <li>3h37 productives, 8h23 d'agitation</li>
+                                <li>0,2% de ton CA annuel</li>
+                                <li>N'importe quel étudiant peut le faire</li>
+                                <li>Tu procrastines sur le HIGH-VALUE</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>🎯 OBJECTIF de cette cartographie :</strong> Mesurer la réalité de ton usage du temps, pas tes impressions. 
+                    Identifier précisément tes tâches HIGH-VALUE (où tu dois passer 70% de ton temps) vs LOW-VALUE (à automatiser/déléguer).
+                </div>
+            </div>
+        </div>
+
+        <!-- Mode d'emploi -->
+        <div class="section">
+            <div class="section-header">
+                🛠️ Mode d'emploi : Comment utiliser cet outil
+            </div>
+            <div class="section-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div class="stat-card">
+                        <h4 style="margin-top: 0;">📝 ÉTAPE 1 : Collecte (5 jours)</h4>
+                        <p style="margin-bottom: 0;">Liste TOUTES tes tâches professionnelles de la semaine. Utilise le formulaire ci-dessous pour ajouter chaque tâche avec sa durée hebdomadaire.</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 style="margin-top: 0;">⚖️ ÉTAPE 2 : Évaluation</h4>
+                        <p style="margin-bottom: 0;">Pour chaque tâche, évalue son Impact CA, ton niveau d'Énergie, et sa Délégabilité. Le score se calcule automatiquement.</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 style="margin-top: 0;">📊 ÉTAPE 3 : Analyse</h4>
+                        <p style="margin-bottom: 0;">Consulte le dashboard pour identifier tes patterns. Utilise les vues filtrées pour analyser par catégorie.</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 style="margin-top: 0;">🎯 ÉTAPE 4 : Action</h4>
+                        <p style="margin-bottom: 0;">Applique les recommandations automatiques. Priorise les tâches LOW-VALUE pour automatisation/délégation.</p>
+                    </div>
+                </div>
+
+                <div class="notion-callout">
+                    <div class="callout-icon">⏱️</div>
+                    <div>
+                        <strong>Temps nécessaire :</strong> 30-45 minutes pour cartographier complètement tes tâches. 
+                        Cette analyse va te servir de base pour TOUS les chapitres suivants. C'est l'investissement le plus rentable que tu puisses faire.
+                    </div>
+                </div>
+
+                <div style="background: #f7f6f3; padding: 20px; border-radius: 6px; margin: 20px 0;">
+                    <h4>🔍 Comment bien évaluer tes tâches</h4>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Impact sur CA :</strong>
+                        <ul>
+                            <li><strong>Fort :</strong> Génère directement du revenus (négociation, livraison client, prospection)</li>
+                            <li><strong>Moyen :</strong> Contribue indirectement (relation client, amélioration produit, formation)</li>
+                            <li><strong>Faible :</strong> Nécessaire mais sans impact mesurable (admin, veille, organisation)</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Niveau d'énergie :</strong>
+                        <ul>
+                            <li><strong>Énergisant :</strong> Tu as envie de le faire, ça te donne de la force</li>
+                            <li><strong>Neutre :</strong> Ni plaisant ni déplaisant, tu le fais sans émotion</li>
+                            <li><strong>Drainant :</strong> Ça te fatigue, tu procrastines, tu évites</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Délégabilité :</strong>
+                        <ul>
+                            <li><strong>Impossible :</strong> Requiert ton expertise unique, tes relations, tes décisions</li>
+                            <li><strong>Difficile :</strong> Possible mais nécessite formation approfondie et supervision</li>
+                            <li><strong>Facile :</strong> Processus clair, peut être fait par n'importe qui avec un bon briefing</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>💡 ASTUCE :</strong> Sois brutal dans tes évaluations. Le perfectionnisme sur des tâches LOW-VALUE est l'ennemi de ta croissance. 
+                    Mieux vaut une tâche déléguée à 80% qu'une tâche parfaite qui te prend 3x plus de temps.
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-header">
+                📊 Dashboard de suivi - Vue d'ensemble
+            </div>
+            <div class="section-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTaches">0</div>
+                        <div class="stat-label">Tâches analysées</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="tempsTotal">0h</div>
+                        <div class="stat-label">Temps total tracké</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="scoreMoyen">0</div>
+                        <div class="stat-label">Score moyen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="pourcentageHighValue">0%</div>
+                        <div class="stat-label">% Tâches HIGH-VALUE</div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card category-production">
+                        <div class="stat-value" id="tempsProduction">0%</div>
+                        <div class="stat-label">🎯 Production</div>
+                    </div>
+                    <div class="stat-card category-vente">
+                        <div class="stat-value" id="tempsVente">0%</div>
+                        <div class="stat-label">💼 Vente</div>
+                    </div>
+                    <div class="stat-card category-communication">
+                        <div class="stat-value" id="tempsCommunication">0%</div>
+                        <div class="stat-label">📧 Communication</div>
+                    </div>
+                    <div class="stat-card category-admin">
+                        <div class="stat-value" id="tempsAdmin">0%</div>
+                        <div class="stat-label">📁 Admin</div>
+                    </div>
+                    <div class="stat-card category-veille">
+                        <div class="stat-value" id="tempsVeille">0%</div>
+                        <div class="stat-label">📚 Veille</div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning" id="alertes" style="display: none;">
+                    <strong>⚠️ ALERTES DÉTECTÉES</strong>
+                    <div id="alertesList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formule de calcul -->
+        <div class="section">
+            <div class="section-header">
+                🧮 Formule de calcul du score de valeur
+            </div>
+            <div class="section-content">
+                <div class="formula-display">
+                    Score = (Impact CA × 3) + (Énergie × 2) - (Délégabilité × 1)
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 20px 0;">
+                    <div>
+                        <h4>Impact CA</h4>
+                        <ul>
+                            <li>Fort = 3 points</li>
+                            <li>Moyen = 2 points</li>
+                            <li>Faible = 1 point</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Énergie</h4>
+                        <ul>
+                            <li>Énergisant = 3 points</li>
+                            <li>Neutre = 2 points</li>
+                            <li>Drainant = 1 point</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Délégabilité</h4>
+                        <ul>
+                            <li>Impossible = 1 point</li>
+                            <li>Difficile = 2 points</li>
+                            <li>Facile = 3 points</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="notion-callout">
+                    <div class="callout-icon">💡</div>
+                    <div>
+                        <strong>Interprétation :</strong> 
+                        Score ≥ 10 = HIGH-VALUE (70% de ton temps) | 
+                        Score 6-9 = MEDIUM-VALUE | 
+                        Score ≤ 5 = LOW-VALUE (automatisation prioritaire)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ajout de tâche -->
+        <div class="section">
+            <div class="section-header">
+                ➕ Ajouter une nouvelle tâche
+            </div>
+            <div class="section-content">
+                <div class="add-task-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nom de la tâche</label>
+                            <input type="text" id="nouvelleTache" placeholder="Ex: Réponse emails clients">
+                        </div>
+                        <div class="form-group">
+                            <label>Durée (minutes/semaine)</label>
+                            <input type="number" id="nouvelleDuree" placeholder="Ex: 120" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Catégorie</label>
+                            <select id="nouvelleCategorie">
+                                <option value="production">🎯 Production</option>
+                                <option value="vente">💼 Vente</option>
+                                <option value="communication">📧 Communication</option>
+                                <option value="admin">📁 Admin</option>
+                                <option value="veille">📚 Veille</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Impact sur CA</label>
+                            <select id="nouvelImpact">
+                                <option value="fort">🔥 Fort - Génère directement du revenus</option>
+                                <option value="moyen">⚡ Moyen - Contribue indirectement</option>
+                                <option value="faible">💤 Faible - Nécessaire sans impact mesurable</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Niveau d'énergie</label>
+                            <select id="nouvelleEnergie">
+                                <option value="energisant">⚡ Énergisant</option>
+                                <option value="neutre">➖ Neutre</option>
+                                <option value="drainant">🔋 Drainant</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Délégabilité</label>
+                            <select id="nouvelleDelegabilite">
+                                <option value="impossible">🔒 Impossible à déléguer</option>
+                                <option value="difficile">⚠️ Difficile à déléguer</option>
+                                <option value="facile">✅ Facile à déléguer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Description détaillée (optionnel)</label>
+                        <textarea id="nouvelleDescription" placeholder="Détaille le processus de cette tâche..."></textarea>
+                    </div>
+                    <button class="btn" onclick="ajouterTache()" style="margin-top: 15px;">➕ Ajouter la tâche</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vues filtrées -->
+        <div class="section">
+            <div class="section-header">
+                👁️ Vues et filtres
+            </div>
+            <div class="section-content">
+                <div class="view-selector">
+                    <span style="font-weight: 600;">Vue :</span>
+                    <button class="view-btn active" onclick="changerVue('tableau')">📋 Tableau</button>
+                    <button class="view-btn" onclick="changerVue('kanban')">📱 Kanban</button>
+                    <button class="view-btn" onclick="changerVue('graphique')">📊 Graphique</button>
+                </div>
+
+                <div class="filter-tabs">
+                    <div class="filter-tab active" onclick="filtrerCategorie('toutes')">Toutes</div>
+                    <div class="filter-tab" onclick="filtrerCategorie('production')">🎯 Production</div>
+                    <div class="filter-tab" onclick="filtrerCategorie('vente')">💼 Vente</div>
+                    <div class="filter-tab" onclick="filtrerCategorie('communication')">📧 Communication</div>
+                    <div class="filter-tab" onclick="filtrerCategorie('admin')">📁 Admin</div>
+                    <div class="filter-tab" onclick="filtrerCategorie('veille')">📚 Veille</div>
+                </div>
+
+                <!-- Vue Tableau -->
+                <div id="vueTableau">
+                    <table class="notion-table">
+                        <thead>
+                            <tr>
+                                <th>Tâche</th>
+                                <th>Durée/sem</th>
+                                <th>Catégorie</th>
+                                <th>Impact CA</th>
+                                <th>Énergie</th>
+                                <th>Délégabilité</th>
+                                <th>Score</th>
+                                <th>Priorité</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableauTaches">
+                            <!-- Les tâches s'ajouteront ici -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Vue Kanban -->
+                <div id="vueKanban" style="display: none;">
+                    <div class="kanban-board">
+                        <div class="kanban-column">
+                            <div class="kanban-header">🔻 LOW-VALUE (≤5)</div>
+                            <div id="kanbanLow">
+                                <!-- Tâches LOW-VALUE -->
+                            </div>
+                        </div>
+                        <div class="kanban-column">
+                            <div class="kanban-header">⚡ MEDIUM-VALUE (6-9)</div>
+                            <div id="kanbanMedium">
+                                <!-- Tâches MEDIUM-VALUE -->
+                            </div>
+                        </div>
+                        <div class="kanban-column">
+                            <div class="kanban-header">🔺 HIGH-VALUE (≥10)</div>
+                            <div id="kanbanHigh">
+                                <!-- Tâches HIGH-VALUE -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vue Graphique -->
+                <div id="vueGraphique" style="display: none;">
+                    <div class="chart-container">
+                        <canvas id="chartRepartition" width="600" height="400"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="chartScores" width="600" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommandations automatiques -->
+        <div class="section">
+            <div class="section-header">
+                🎯 Recommandations automatiques
+            </div>
+            <div class="section-content">
+                <div id="recommandations">
+                    <!-- Les recommandations se génèreront automatiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Export des données -->
+        <div class="section">
+            <div class="section-header">
+                💾 Export et sauvegarde
+            </div>
+            <div class="section-content">
+                <div class="export-buttons">
+                    <button class="btn" onclick="exporterJSON()">📄 Exporter JSON</button>
+                    <button class="btn" onclick="exporterCSV()">📊 Exporter CSV</button>
+                    <button class="btn btn-secondary" onclick="importerDonnees()">📁 Importer données</button>
+                    <input type="file" id="fileImport" style="display: none;" accept=".json" onchange="traiterImport(event)">
+                </div>
+                
+                <div class="notion-callout">
+                    <div class="callout-icon">💡</div>
+                    <div>
+                        <strong>Conseil :</strong> Sauvegarde tes données régulièrement. 
+                        Cette analyse va te servir de base pour tous les chapitres suivants.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let taches = JSON.parse(localStorage.getItem('cartographie_taches')) || [];
+        let filtreActuel = 'toutes';
+        let vueActuelle = 'tableau';
+        
+        // Données exemples pour démarrer
+        const tachesExemples = [
+            {
+                id: 1,
+                nom: "Réponse emails clients",
+                duree: 180,
+                categorie: "communication",
+                impact: "moyen",
+                energie: "drainant",
+                delegabilite: "facile",
+                description: "Répondre aux emails quotidiens des clients"
+            },
+            {
+                id: 2,
+                nom: "Création contenu Instagram",
+                duree: 240,
+                categorie: "production",
+                impact: "moyen",
+                energie: "energisant",
+                delegabilite: "difficile",
+                description: "Créer et programmer les posts Instagram"
+            },
+            {
+                id: 3,
+                nom: "Comptabilité mensuelle",
+                duree: 120,
+                categorie: "admin",
+                impact: "faible",
+                energie: "drainant",
+                delegabilite: "facile",
+                description: "Saisie des factures et rapprochement bancaire"
+            }
+        ];
+        
+        // Si aucune tâche, charger les exemples
+        if (taches.length === 0) {
+            taches = tachesExemples;
+            sauvegarder();
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            afficherTaches();
+            mettreAJourDashboard();
+            genererRecommandations();
+        });
+        
+        function calculerScore(impact, energie, delegabilite) {
+            const impactPoints = { 'fort': 3, 'moyen': 2, 'faible': 1 };
+            const energiePoints = { 'energisant': 3, 'neutre': 2, 'drainant': 1 };
+            const delegabilitePoints = { 'impossible': 1, 'difficile': 2, 'facile': 3 };
+            
+            return (impactPoints[impact] * 3) + (energiePoints[energie] * 2) - (delegabilitePoints[delegabilite] * 1);
+        }
+        
+        function ajouterTache() {
+            const nom = document.getElementById('nouvelleTache').value.trim();
+            const duree = parseInt(document.getElementById('nouvelleDuree').value);
+            const categorie = document.getElementById('nouvelleCategorie').value;
+            const impact = document.getElementById('nouvelImpact').value;
+            const energie = document.getElementById('nouvelleEnergie').value;
+            const delegabilite = document.getElementById('nouvelleDelegabilite').value;
+            const description = document.getElementById('nouvelleDescription').value.trim();
+            
+            if (!nom || !duree || duree <= 0) {
+                alert('Merci de remplir au minimum le nom et la durée de la tâche.');
+                return;
+            }
+            
+            const nouvelleTache = {
+                id: Date.now(),
+                nom,
+                duree,
+                categorie,
+                impact,
+                energie,
+                delegabilite,
+                description,
+                score: calculerScore(impact, energie, delegabilite),
+                dateAjout: new Date().toISOString()
+            };
+            
+            taches.push(nouvelleTache);
+            sauvegarder();
+            
+            // Réinitialiser le formulaire
+            document.getElementById('nouvelleTache').value = '';
+            document.getElementById('nouvelleDuree').value = '';
+            document.getElementById('nouvelleDescription').value = '';
+            
+            afficherTaches();
+            mettreAJourDashboard();
+            genererRecommandations();
+            
+            alert('✅ Tâche ajoutée avec succès !');
+        }
+        
+        function supprimerTache(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) {
+                taches = taches.filter(t => t.id !== id);
+                sauvegarder();
+                afficherTaches();
+                mettreAJourDashboard();
+                genererRecommandations();
+            }
+        }
+        
+        function afficherTaches() {
+            const tachesFiltrees = filtreActuel === 'toutes' ? 
+                taches : taches.filter(t => t.categorie === filtreActuel);
+            
+            if (vueActuelle === 'tableau') {
+                afficherTableau(tachesFiltrees);
+            } else if (vueActuelle === 'kanban') {
+                afficherKanban(tachesFiltrees);
+            } else if (vueActuelle === 'graphique') {
+                afficherGraphiques(tachesFiltrees);
+            }
+        }
+        
+        function afficherTableau(tachesFiltrees) {
+            const tbody = document.getElementById('tableauTaches');
+            tbody.innerHTML = '';
+            
+            // Trier par score décroissant
+            const tachesTriees = [...tachesFiltrees].sort((a, b) => b.score - a.score);
+            
+            tachesTriees.forEach(tache => {
+                const tr = document.createElement('tr');
+                tr.className = `category-${tache.categorie}`;
+                
+                const scoreClass = tache.score >= 10 ? 'score-high' : 
+                                 tache.score >= 6 ? 'score-medium' : 'score-low';
+                
+                const priorite = tache.score >= 10 ? 'HIGH-VALUE' :
+                               tache.score >= 6 ? 'MEDIUM-VALUE' : 'LOW-VALUE';
+                
+                tr.innerHTML = `
+                    <td><strong>${tache.nom}</strong><br><small style="color: #787774;">${tache.description || ''}</small></td>
+                    <td>${tache.duree}min</td>
+                    <td>${formatCategorie(tache.categorie)}</td>
+                    <td>${formatImpact(tache.impact)}</td>
+                    <td>${formatEnergie(tache.energie)}</td>
+                    <td>${formatDelegabilite(tache.delegabilite)}</td>
+                    <td><span class="${scoreClass}">${tache.score}</span></td>
+                    <td><span class="${scoreClass}">${priorite}</span></td>
+                    <td>
+                        <button class="btn" style="padding: 4px 8px; font-size: 12px; margin-right: 5px;" onclick="modifierTache(${tache.id})">✏️</button>
+                        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="supprimerTache(${tache.id})">🗑️</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+        }
+        
+        function afficherKanban(tachesFiltrees) {
+            const lowColumn = document.getElementById('kanbanLow');
+            const mediumColumn = document.getElementById('kanbanMedium');
+            const highColumn = document.getElementById('kanbanHigh');
+            
+            // Vider les colonnes
+            lowColumn.innerHTML = '';
+            mediumColumn.innerHTML = '';
+            highColumn.innerHTML = '';
+            
+            tachesFiltrees.forEach(tache => {
+                const card = document.createElement('div');
+                card.className = 'kanban-card';
+                
+                card.innerHTML = `
+                    <div class="card-title">${tache.nom}</div>
+                    <div class="card-meta">
+                        <span>${tache.duree}min/sem</span>
+                        <span>${formatCategorie(tache.categorie)}</span>
+                        <span>Score: ${tache.score}</span>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #787774;">
+                        ${tache.description || ''}
+                    </div>
+                `;
+                
+                if (tache.score >= 10) {
+                    highColumn.appendChild(card);
+                } else if (tache.score >= 6) {
+                    mediumColumn.appendChild(card);
+                } else {
+                    lowColumn.appendChild(card);
+                }
+            });
+        }
+        
+        function afficherGraphiques(tachesFiltrees) {
+            // Simuler des graphiques avec du texte structuré
+            const chartContainer = document.getElementById('vueGraphique');
+            chartContainer.innerHTML = `
+                <div class="chart-container">
+                    <h3>Répartition par catégorie</h3>
+                    <div id="graphiqueCategories"></div>
+                </div>
+                <div class="chart-container">
+                    <h3>Distribution des scores</h3>
+                    <div id="graphiqueScores"></div>
+                </div>
+            `;
+            
+            // Calculer les données
+            const categories = {};
+            const scores = { low: 0, medium: 0, high: 0 };
+            const tempsTotal = tachesFiltrees.reduce((sum, t) => sum + t.duree, 0);
+            
+            tachesFiltrees.forEach(tache => {
+                categories[tache.categorie] = (categories[tache.categorie] || 0) + tache.duree;
+                
+                if (tache.score >= 10) scores.high += tache.duree;
+                else if (tache.score >= 6) scores.medium += tache.duree;
+                else scores.low += tache.duree;
+            });
+            
+            // Afficher les catégories
+            const catContainer = document.getElementById('graphiqueCategories');
+            catContainer.innerHTML = Object.entries(categories).map(([cat, duree]) => {
+                const percent = ((duree / tempsTotal) * 100).toFixed(1);
+                return `
+                    <div style="margin: 10px 0; padding: 10px; background: #f7f6f3; border-radius: 4px;">
+                        <strong>${formatCategorie(cat)}</strong>: ${(duree/60).toFixed(1)}h (${percent}%)
+                        <div style="width: 100%; height: 8px; background: #e9e9e7; border-radius: 4px; margin-top: 5px;">
+                            <div style="width: ${percent}%; height: 100%; background: #2383e2; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Afficher les scores
+            const scoreContainer = document.getElementById('graphiqueScores');
+            const totalScore = scores.low + scores.medium + scores.high;
+            scoreContainer.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div class="stat-card" style="border-left: 4px solid #dc3545;">
+                        <div style="font-size: 18px; font-weight: bold; color: #dc3545;">${((scores.low/totalScore)*100).toFixed(1)}%</div>
+                        <div>LOW-VALUE (≤5)</div>
+                        <div style="font-size: 12px; color: #787774;">${(scores.low/60).toFixed(1)}h</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid #fd7e14;">
+                        <div style="font-size: 18px; font-weight: bold; color: #fd7e14;">${((scores.medium/totalScore)*100).toFixed(1)}%</div>
+                        <div>MEDIUM-VALUE (6-9)</div>
+                        <div style="font-size: 12px; color: #787774;">${(scores.medium/60).toFixed(1)}h</div>
+                    </div>
+                    <div class="stat-card" style="border-left: 4px solid #28a745;">
+                        <div style="font-size: 18px; font-weight: bold; color: #28a745;">${((scores.high/totalScore)*100).toFixed(1)}%</div>
+                        <div>HIGH-VALUE (≥10)</div>
+                        <div style="font-size: 12px; color: #787774;">${(scores.high/60).toFixed(1)}h</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function mettreAJourDashboard() {
+            const tempsTotal = taches.reduce((sum, t) => sum + t.duree, 0);
+            const scoreMoyen = taches.length > 0 ? 
+                (taches.reduce((sum, t) => sum + t.score, 0) / taches.length).toFixed(1) : 0;
+            
+            const highValueTaches = taches.filter(t => t.score >= 10);
+            const pourcentageHigh = taches.length > 0 ? 
+                ((highValueTaches.length / taches.length) * 100).toFixed(1) : 0;
+            
+            // Calculs par catégorie
+            const categories = {
+                production: 0, vente: 0, communication: 0, admin: 0, veille: 0
+            };
+            
+            taches.forEach(tache => {
+                categories[tache.categorie] += tache.duree;
+            });
+            
+            // Mise à jour de l'affichage
+            document.getElementById('totalTaches').textContent = taches.length;
+            document.getElementById('tempsTotal').textContent = `${(tempsTotal/60).toFixed(1)}h`;
+            document.getElementById('scoreMoyen').textContent = scoreMoyen;
+            document.getElementById('pourcentageHighValue').textContent = `${pourcentageHigh}%`;
+            
+            // Pourcentages par catégorie
+            Object.keys(categories).forEach(cat => {
+                const pourcentage = tempsTotal > 0 ? 
+                    ((categories[cat] / tempsTotal) * 100).toFixed(1) : 0;
+                const elementId = `temps${cat.charAt(0).toUpperCase() + cat.slice(1)}`;
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.textContent = `${pourcentage}%`;
+                }
+            });
+            
+            // Vérifier les alertes
+            verifierAlertes(categories, tempsTotal);
+        }
+        
+        function verifierAlertes(categories, tempsTotal) {
+            const alertes = [];
+            const prodVentePercent = ((categories.production + categories.vente) / tempsTotal) * 100;
+            const commAdminPercent = ((categories.communication + categories.admin) / tempsTotal) * 100;
+            
+            if (prodVentePercent < 40) {
+                alertes.push('Tu passes moins de 40% de ton temps en Production + Vente. Tu risques de faire tourner une machine administrative, pas un business.');
+            }
+            
+            if (commAdminPercent > 30) {
+                alertes.push('Tu passes plus de 30% de ton temps en Communication + Admin. Tu es devenu un employé de ton propre business.');
+            }
+            
+            const lowValueTasks = taches.filter(t => t.score <= 5);
+            const lowValuePercent = (lowValueTasks.reduce((sum, t) => sum + t.duree, 0) / tempsTotal) * 100;
+            
+            if (lowValuePercent > 60) {
+                alertes.push('Plus de 60% de ton temps part en tâches LOW-VALUE. Automatisation/délégation urgente nécessaire.');
+            }
+            
+            const alertContainer = document.getElementById('alertes');
+            const alertsList = document.getElementById('alertesList');
+            
+            if (alertes.length > 0) {
+                alertContainer.style.display = 'block';
+                alertsList.innerHTML = alertes.map(alerte => `<li>${alerte}</li>`).join('');
+            } else {
+                alertContainer.style.display = 'none';
+            }
+        }
+        
+        function genererRecommandations() {
+            const recommandations = document.getElementById('recommandations');
+            
+            // Analyser les tâches
+            const lowValueTasks = taches.filter(t => t.score <= 5);
+            const highValueTasks = taches.filter(t => t.score >= 10);
+            const delegablesTasks = taches.filter(t => t.delegabilite === 'facile' && t.score <= 7);
+            const drainanteTasks = taches.filter(t => t.energie === 'drainant');
+            
+            let html = '<div class="stats-grid">';
+            
+            // TOP 3 tâches à automatiser
+            const topAutomatisation = [...lowValueTasks]
+                .sort((a, b) => a.score - b.score)
+                .slice(0, 3);
+            
+            html += `
+                <div class="stat-card">
+                    <div class="stat-value">${topAutomatisation.length}</div>
+                    <div class="stat-label">Tâches à automatiser en priorité</div>
+                    <div style="margin-top: 10px; font-size: 12px;">
+                        ${topAutomatisation.map(t => `• ${t.nom} (${t.score} pts)`).join('<br>')}
+                    </div>
+                </div>
+            `;
+            
+            // TOP 3 tâches à déléguer
+            const topDelegation = [...delegablesTasks]
+                .sort((a, b) => b.duree - a.duree)
+                .slice(0, 3);
+            
+            html += `
+                <div class="stat-card">
+                    <div class="stat-value">${topDelegation.length}</div>
+                    <div class="stat-label">Tâches à déléguer en priorité</div>
+                    <div style="margin-top: 10px; font-size: 12px;">
+                        ${topDelegation.map(t => `• ${t.nom} (${t.duree}min/sem)`).join('<br>')}
+                    </div>
+                </div>
+            `;
+            
+            // Potentiel de gain
+            const potentielGain = (lowValueTasks.reduce((sum, t) => sum + t.duree, 0) * 0.8) / 60;
+            
+            html += `
+                <div class="stat-card">
+                    <div class="stat-value">${potentielGain.toFixed(1)}h</div>
+                    <div class="stat-label">Potentiel de gain/semaine</div>
+                    <div style="margin-top: 10px; font-size: 12px;">
+                        En automatisant/déléguant les tâches LOW-VALUE
+                    </div>
+                </div>
+            `;
+            
+            // Focus recommandé
+            const tempsHighValue = highValueTasks.reduce((sum, t) => sum + t.duree, 0) / 60;
+            const tempsTotal = taches.reduce((sum, t) => sum + t.duree, 0) / 60;
+            const pourcentageActuel = ((tempsHighValue / tempsTotal) * 100).toFixed(1);
+            
+            html += `
+                <div class="stat-card">
+                    <div class="stat-value">${pourcentageActuel}%</div>
+                    <div class="stat-label">Temps actuel sur HIGH-VALUE</div>
+                    <div style="margin-top: 10px; font-size: 12px;">
+                        Objectif : 70% minimum
+                    </div>
+                </div>
+            `;
+            
+            html += '</div>';
+            
+            // Actions recommandées
+            html += '<div class="notion-callout"><div class="callout-icon">🎯</div><div>';
+            html += '<strong>Actions immédiates recommandées :</strong><ul>';
+            
+            if (lowValueTasks.length > 0) {
+                html += `<li>Automatise "${lowValueTasks[0].nom}" cette semaine (score le plus bas : ${lowValueTasks[0].score})</li>`;
+            }
+            
+            if (delegablesTasks.length > 0) {
+                html += `<li>Délègue "${delegablesTasks[0].nom}" ce mois-ci (${delegablesTasks[0].duree}min récupérables/semaine)</li>`;
+            }
+            
+            if (parseFloat(pourcentageActuel) < 70) {
+                html += '<li>Bloque 70% de ton temps sur les tâches HIGH-VALUE uniquement</li>';
+            }
+            
+            if (drainanteTasks.length > 2) {
+                html += `<li>Tu as ${drainanteTasks.length} tâches drainantes - priorise leur automatisation/délégation</li>`;
+            }
+            
+            html += '</ul></div></div>';
+            
+            recommandations.innerHTML = html;
+        }
+        
+        function changerVue(nouvelleVue) {
+            // Masquer toutes les vues
+            document.getElementById('vueTableau').style.display = 'none';
+            document.getElementById('vueKanban').style.display = 'none';
+            document.getElementById('vueGraphique').style.display = 'none';
+            
+            // Désactiver tous les boutons
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Activer la nouvelle vue
+            vueActuelle = nouvelleVue;
+            document.getElementById(`vue${nouvelleVue.charAt(0).toUpperCase() + nouvelleVue.slice(1)}`).style.display = 'block';
+            event.target.classList.add('active');
+            
+            afficherTaches();
+        }
+        
+        function filtrerCategorie(categorie) {
+            filtreActuel = categorie;
+            
+            // Mettre à jour les onglets
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            afficherTaches();
+        }
+        
+        function formatCategorie(categorie) {
+            const categories = {
+                'production': '🎯 Production',
+                'vente': '💼 Vente',
+                'communication': '📧 Communication',
+                'admin': '📁 Admin',
+                'veille': '📚 Veille'
+            };
+            return categories[categorie] || categorie;
+        }
+        
+        function formatImpact(impact) {
+            const impacts = {
+                'fort': '🔥 Fort',
+                'moyen': '⚡ Moyen',
+                'faible': '💤 Faible'
+            };
+            return impacts[impact] || impact;
+        }
+        
+        function formatEnergie(energie) {
+            const energies = {
+                'energisant': '⚡ Énergisant',
+                'neutre': '➖ Neutre',
+                'drainant': '🔋 Drainant'
+            };
+            return energies[energie] || energie;
+        }
+        
+        function formatDelegabilite(delegabilite) {
+            const delegabilites = {
+                'impossible': '🔒 Impossible',
+                'difficile': '⚠️ Difficile',
+                'facile': '✅ Facile'
+            };
+            return delegabilites[delegabilite] || delegabilite;
+        }
+        
+        function sauvegarder() {
+            localStorage.setItem('cartographie_taches', JSON.stringify(taches));
+        }
+        
+        function exporterJSON() {
+            const data = {
+                taches: taches,
+                dateExport: new Date().toISOString(),
+                version: '1.0',
+                statistiques: {
+                    totalTaches: taches.length,
+                    tempsTotal: taches.reduce((sum, t) => sum + t.duree, 0),
+                    scoreMoyen: taches.reduce((sum, t) => sum + t.score, 0) / taches.length
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cartographie_taches_' + new Date().toISOString().slice(0, 10) + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function exporterCSV() {
+            const headers = ['Nom', 'Durée (min/sem)', 'Catégorie', 'Impact CA', 'Énergie', 'Délégabilité', 'Score', 'Description'];
+            const csvContent = [
+                headers.join(','),
+                ...taches.map(tache => [
+                    `"${tache.nom}"`,
+                    tache.duree,
+                    tache.categorie,
+                    tache.impact,
+                    tache.energie,
+                    tache.delegabilite,
+                    tache.score,
+                    `"${tache.description || ''}"`
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'cartographie_taches_' + new Date().toISOString().slice(0, 10) + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function importerDonnees() {
+            document.getElementById('fileImport').click();
+        }
+        
+        function traiterImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.taches && Array.isArray(data.taches)) {
+                        if (confirm('Remplacer toutes les tâches actuelles par les données importées ?')) {
+                            taches = data.taches.map(t => ({
+                                ...t,
+                                score: calculerScore(t.impact, t.energie, t.delegabilite)
+                            }));
+                            sauvegarder();
+                            afficherTaches();
+                            mettreAJourDashboard();
+                            genererRecommandations();
+                            alert('✅ Données importées avec succès !');
+                        }
+                    } else {
+                        alert('❌ Format de fichier invalide.');
+                    }
+                } catch (error) {
+                    alert('❌ Erreur lors de la lecture du fichier.');
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function modifierTache(id) {
+            const tache = taches.find(t => t.id === id);
+            if (!tache) return;
+            
+            // Pré-remplir le formulaire avec les données existantes
+            document.getElementById('nouvelleTache').value = tache.nom;
+            document.getElementById('nouvelleDuree').value = tache.duree;
+            document.getElementById('nouvelleCategorie').value = tache.categorie;
+            document.getElementById('nouvelImpact').value = tache.impact;
+            document.getElementById('nouvelleEnergie').value = tache.energie;
+            document.getElementById('nouvelleDelegabilite').value = tache.delegabilite;
+            document.getElementById('nouvelleDescription').value = tache.description || '';
+            
+            // Supprimer l'ancienne tâche
+            supprimerTache(id);
+            
+            // Faire défiler vers le formulaire
+            document.querySelector('.add-task-form').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('nouvelleTache').focus();
+        }
+        
+        // Auto-sauvegarde toutes les 30 secondes
+        setInterval(sauvegarder, 30000);
+        
+        // Initialiser l'affichage au chargement
+        afficherTaches();
+        mettreAJourDashboard();
+        genererRecommandations();
+    </script>
+</body>
+</html>
